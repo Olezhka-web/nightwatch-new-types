@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites errors="1"
+            failures="0"
+            tests="0">
+
+  <testsuite name="testPageObject"
+    errors="1" failures="0" hostname="" id="" package="testPageObject" skipped="1"
+    tests="0" time="0.000" timestamp="">
+  
+
+  
+    <system-err>
+       An error occurred while creating a new GeckoDriver session: [WebDriverError] Process unexpectedly closed with status 0
+  Verify if GeckoDriver is configured correctly; using:
+  {
+     start_process: true,
+     server_path: &#39;C:\\Users\\olegp\\Desktop\\nightwatch\\node_modules\\geckodriver\\geckodriver.exe&#39;,
+     port: undefined,
+     host: &#39;localhost&#39;,
+     ssl: false,
+     default_path_prefix: &#39;&#39;,
+     proxy: undefined,
+     cli_args: {}
+  }
+
+ 
+  Set webdriver.log_path in your Nightwatch config to retrieve more logs from GeckoDriver.
+    </system-err>
+  
+
+    
+    <error message=""><![CDATA[
+      
+      ]]></error>  
+
+  
+    
+    <testcase
+      name="should test a Google page" classname="testPageObject">
+      <skipped />
+    </testcase>
+    
+  
+  </testsuite>
+</testsuites>
