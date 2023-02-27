@@ -15,13 +15,13 @@
 module.exports = {
   // An array of folders (excluding subfolders) where your tests are located;
   // if this is not specified, the test source must be passed as the second argument to the test runner.
-  src_folders: ['./distrib/test/page-object/test'],
+  src_folders: ['./distrib/test/custom-command/test'],
 
   // See https://nightwatchjs.org/guide/concepts/page-object-model.html
   page_objects_path: ['./distrib/test/page-object/pages'],
 
   // See https://nightwatchjs.org/guide/extending-nightwatch/adding-custom-commands.html
-  custom_commands_path: [],
+  custom_commands_path: ['./distrib/test/custom-command/commands'],
 
   // See https://nightwatchjs.org/guide/extending-nightwatch/adding-custom-assertions.html
   custom_assertions_path: '',
