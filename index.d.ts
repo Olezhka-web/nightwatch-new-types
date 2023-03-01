@@ -20,6 +20,7 @@
 import { WebElement, By, RelativeBy, Actions } from 'selenium-webdriver';
 import { Protocol } from 'devtools-protocol';
 import { Expect } from './expect';
+import { NightwatchCustomCommands } from "./src/custom-command";
 
 export * from './globals';
 export * from './expect';
@@ -1808,9 +1809,6 @@ export interface NightwatchAPI
     launchUrl: string;
     launch_url: string;
 }
-
-// tslint:disable-next-line:no-empty-interface
-export interface NightwatchCustomCommands {}
 
 // tslint:disable-next-line:no-empty-interface
 export interface NightwatchCustomAssertions {}
