@@ -2,7 +2,7 @@ import { LocateStrategy } from "../../index";
 
 export interface ElementProperties {
   /**
-   * the element selector name
+   * The element selector name
    *
    * @example
    * '@searchBar'

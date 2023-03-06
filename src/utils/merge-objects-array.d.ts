@@ -2,10 +2,10 @@
  * Merge Objects Array
  *
  * @example
- * If array
+ * // if array
  * [{ a: {}, b: {} }, { c: {} }] => { a: {}, b: {}, c: {} }
  *
- * If object
+ * // if object
  * {} => {}
  */
 export type MergeObjectsArray<T> = T extends Array<infer U>

@@ -21,6 +21,8 @@ import { WebElement, By, RelativeBy, Actions } from 'selenium-webdriver';
 import { Protocol } from 'devtools-protocol';
 import { Expect } from './expect';
 import { NightwatchCustomCommands } from "./src/custom-command";
+import { NightwatchCustomAssertions } from "./src/custom-assertion";
+import { NightwatchGlobals } from "./src/globals";
 
 export * from './globals';
 export * from './expect';
@@ -629,85 +631,6 @@ export interface NightwatchOptions {
      * Sets the initial window size: {height: number, width: number}
      */
     window_size?: WindowSize;
-}
-
-export interface NightwatchGlobals {
-    [key: string]: any;
-    /**
-     * this controls whether to abort the test execution when an assertion failed and skip the rest
-     * it's being used in waitFor commands and expect assertions
-     * @default true
-     */
-    abortOnAssertionFailure?: boolean | undefined;
-
-    /**
-     * this controls whether to abort the test execution when an assertion failed and skip the rest
-     * it's being used in waitFor commands and expect assertions
-     * @default false
-     */
-    abortOnElementLocateError?: boolean | undefined;
-
-    /**
-     * this will overwrite the default polling interval (currently 500ms) for waitFor commands
-     * and expect assertions that use retry
-     * @default 500
-     */
-    waitForConditionPollInterval?: number | undefined;
-
-    /**
-     * default timeout value in milliseconds for waitFor commands and implicit waitFor value for
-     * expect assertions
-     * @default 5000
-     */
-    waitForConditionTimeout?: number | undefined;
-
-    /**
-     * this will cause waitFor commands on elements to throw an error if multiple
-     * elements are found using the given locate strategy and selector
-     * @default false
-     */
-    throwOnMultipleElementsReturned?: boolean | undefined;
-
-    /**
-     * By default a warning is printed if multiple elements are found using the given locate strategy
-     * and selector; set this to true to suppress those warnings
-     * @default false
-     */
-    suppressWarningsOnMultipleElementsReturned: boolean | undefined;
-
-    /**
-     * controls the timeout time for async hooks. Expects the done() callback to be invoked within this time
-     * or an error is thrown
-     * @default 20000
-     */
-    asyncHookTimeout?: number | undefined;
-
-    /**
-     * controls the timeout value for when running async unit tests. Expects the done() callback to be invoked within this time
-     *  or an error is thrown
-     * @default  2000
-     */
-    unitTestsTimeout?: number | undefined;
-
-    /**
-     * controls the timeout value for when executing the global async reporter. Expects the done() callback to be invoked within this time
-     * or an error is thrown
-     * @default 20000
-     */
-    customReporterCallbackTimeout?: number | undefined;
-
-    /**
-     * Automatically retrying failed assertions - You can tell Nightwatch to automatically retry failed assertions until a given timeout is reached, before the test runner gives up and fails the test.
-     */
-    retryAssertionTimeout?: number | undefined;
-
-    reporter: (results: any, cb: any) => void;
-    beforeTestSuite(browser: any): Promise<void>;
-    afterTestSuite(browser: any): Promise<void>;
-    beforeTestCase(browser: any): Promise<void>;
-    afterTestCase(browser: any): Promise<void>;
-    onBrowserNavigate(browser: any): Promise<void>;
-    onBrowserQuit(browser: any): Promise<void>;
 }
 
 export interface NightwatchSeleniumOptions {
@@ -1811,9 +1734,6 @@ export interface NightwatchAPI
 }
 
 // tslint:disable-next-line:no-empty-interface
-export interface NightwatchCustomAssertions {}
-
-// tslint:disable-next-line:no-empty-interface
 export interface NightwatchCustomPageObjects {}
 
 export interface NightwatchBrowser
@@ -2119,29 +2039,6 @@ export type NightwatchAssert = (
     abortOnFailure?: boolean,
     originalStackTrace?: string,
 ) => void;
-
-/**
- * Abstract assertion class that will subclass all defined assertions
- *
- * All assertions must implement the following api:
- *
- * - @param {T|function} expected
- * - @param {string} message
- * - @param {function} pass
- * - @param {function} value
- * - @param {function} command
- * - @param {function} - Optional failure
- */
-export interface NightwatchAssertion<T, U = any> {
-    expected: (() => T) | T;
-    message: string;
-    pass(value: T): any;
-    value(result: U): T;
-    command(callback: (result: U) => void): this;
-    failure?(result: U): boolean;
-    api: NightwatchAPI;
-    client: NightwatchClient;
-}
 
 export interface NightwatchClient extends Nightwatch {
     api: NightwatchAPI;

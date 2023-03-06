@@ -4,19 +4,17 @@ import { ElementProperties } from "./elements";
 import { MergeObjectsArray } from "../utils/merge-objects-array";
 
 /**
+ * Page objects provide an additional layer of abstraction for test case creation.
  * Page objects are defined in modules and parsed into factory functions that create page object instances.
- * @param commands - A list of objects containing functions to represent methods added to the page object instance.
- *
- * @param elements - An object, or array of objects, of named element definitions to be used as element selectors
- * within element commands called from the page object.
- *
- * @param props - An object or a function returning an object representing a container for user variables.
- *
- * @param sections - An object of named sections definitions defining the sections within the page object.
- *
- * @param url - A url or function returning a url to be used in a url() command when the page's navigate() method is called.
  *
  * @see https://nightwatchjs.org/api/pageobject/#overview
+ *
+ * @remarks Use satisfies to preserve types!
+ *
+ * @example
+ * const homePage = {
+ *   // Some options
+ * } satisfies PageObjectModel;
  */
 // TODO WRONG TYPES!!!
 export interface PageObjectModel {
@@ -25,33 +23,35 @@ export interface PageObjectModel {
    * Page-specific commands: {@link https://nightwatchjs.org/guide/using-page-objects/writing-page-specific-commands.html}
    *
    * @example
-   * // Page Object Model home.ts file
    * class MyCommands {
    *   myFirstMethod() {
    *     return 'My First Method';
    *   }
-   *
-   *   mySecondMethod() {
-   *     return 'My Second Method';
-   *   }
    * }
    *
-   * const homePage: PageObjectModule = {
+   * const homePage = {
    *   commands: MyCommands
-   * };
-   *
-   * export default homePage;
-   *
-   *
-   * // Test home.spec.ts file
-   * const homePage = browser.page.homePage();
-   *
-   * homePage.myFirstMethod();
+   * } satisfies PageObjectModel;
    */
   commands?: Record<string, (...args: any) => unknown>[];
 
   /**
-   * TODO
+   * An object, or array of objects, of named element definitions to be used
+   * as element selectors within element commands called from the page object.
+   *
+   * @example
+   * const homePage = {
+   *   elements: [
+   *     {
+   *       searchBar: {
+   *         selector: 'input[type=text]',
+   *       },
+   *       submitButton: {
+   *         selector: 'input[name=btnK]',
+   *       },
+   *     },
+   *   ]
+   * } satisfies PageObjectModel;
    */
   elements?: { [name: string]: ElementProperties } | { [name: string]: ElementProperties }[];
 
@@ -60,57 +60,54 @@ export interface PageObjectModel {
    * Props objects are copied directly into the props property of the page object instance.
    *
    * @example
-   * // Page Object Model home.ts file
-   * const homePage: PageObjectModule = {
+   * const homePage = {
    *   props: {
-   *     email: "example@gmail.com"
+   *     myVar: "some info"
    *   }
-   * };
-   *
-   * export default homePage;
-   *
-   *
-   * // Test home.spec.ts file
-   * const homePage = browser.page.homePage();
-   *
-   * console.log(homePage.props.email);
+   * } satisfies PageObjectModel;
    */
   props?: Record<string, unknown> | (() => Record<string, unknown>);
 
   /**
-   * TODO
+   * An object of named sections definitions defining the sections within the page object.
+   *
+   * @example
+   * const homePage = {
+   *   sections: {
+   *     menu: {
+   *       selector: '#gb',
+   *       elements: {
+   *         mail: {
+   *           selector: 'a[href="https://mail.google.com/mail/&ogbl"]'
+   *         }
+   *       }
+   *     }
+   *   }
+   * } satisfies PageObjectModel;
    */
   sections?: {
-    [name: string]: SectionProperties
+    [name: string]: SectionProperties;
   };
 
   /**
    * A url or function returning a url to be used in a url() command when the page's navigate() method is called.
    *
    * @example
-   * // Page Object Model home.ts file
    * const homePage = {
-   *   url: function(host: string, port: number) {
-   *      return `http://${host}:${port}`;
+   *   url: function() {
+   *      return this.api.launchUrl;
    *   }
-   * } satisfies PageObjectModule;
-   *
-   * export default homePage;
-   *
-   *
-   * // Test home.spec.ts file
-   * const homePage = browser.page.homePage();
-   *
-   * homePage.navigate(homePage.url('localhost', 3000));
+   * } satisfies PageObjectModel;
    */
   url?: string | ((...args: any) => string);
 }
 
 /**
  * #### [Enhanced Page Object Instances](https://github.com/nightwatchjs/nightwatch/wiki/Page-Object-API#enhanced-page-object-instances)
- * Page object module definitions are used to define page object instances when their respective factory functions within the page reference of the standard command API is called.
+ * Page object module definitions are used to define page object instances when their respective
+ * factory functions within the page reference of the standard command API is called.
  * ```
- * var myPageObject = browser.page.MyPage(); // defined in MyPage.js module
+ * const myPageObject = browser.page.MyPage(); // defined in MyPage.js module
  * ```
  * Every time a factory function like MyPage above is called, a new instance of the page object is instantiated.
  */
@@ -125,12 +122,26 @@ export type EnhancedPageObject<
   NightwatchCustomCommands &
   EnhancedPageObjectSharedFields<URL, Required<MergeObjectsArray<Commands>>, Props, Required<MergeObjectsArray<Elements>>, Sections> &
   Required<MergeObjectsArray<Commands>> & {
+  /**
+   * A url or function returning a url to be used in a url() command when the page's navigate() method is called.
+   *
+   * @example
+   * const homePageObject = browser.page.homePage();
+   *
+   * googlePage.url; // if string type
+   * googlePage.url(); // if function type
+   */
   url: URL;
 
   /**
    * This command is an alias to url and also a convenience method because when called without any arguments
-   *  it performs a call to .url() with passing the value of `url` property on the page object.
+   * it performs a call to .url() with passing the value of `url` property on the page object.
    * Uses `url` protocol command.
+   *
+   * @example
+   * const homePageObject = browser.page.homePage();
+   *
+   * homePageObject.navigate();
    */
   navigate(url?: string, callback?: () => void): EnhancedPageObject<URL, Commands, Props, Elements, Sections>;
 };

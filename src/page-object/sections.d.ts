@@ -10,15 +10,81 @@ import { EnhancedPageObject } from "./index";
 import { MergeObjectsArray } from "../utils/merge-objects-array";
 
 export interface SectionProperties {
+  /**
+   * The element selector name
+   *
+   * @example
+   * sections: {
+   *   apps: {
+   *     selector: 'div.gb_pc'
+   *   }
+   * }
+   */
   selector: string;
 
+  /**
+   * An object, or array of objects, of named element definitions to be used
+   * as element selectors within element commands.
+   *
+   * @example
+   * sections: {
+   *   apps: {
+   *     selector: 'div.gb_pc',
+   *     elements: {
+   *       myAccount: {
+   *         selector: '#gb192'
+   *       },
+   *       googlePlus: {
+   *         selector: '#gb119'
+   *       }
+   *     }
+   *   }
+   * }
+   */
   elements?: { [name: string]: ElementProperties } | { [name: string]: ElementProperties }[];
 
+  /**
+   * An object of named sections definitions defining the sections.
+   *
+   * @example
+   * sections: {
+   *   menu: {
+   *     selector: '#gb',
+   *     sections: {
+   *       apps: {
+   *         selector: 'div.gb_pc',
+   *         elements: {
+   *           myAccount: {
+   *             selector: '#gb192'
+   *           }
+   *         }
+   *       }
+   *     }
+   *   }
+   * }
+   */
   sections?: {
     [name: string]: SectionProperties;
   };
 
-  commands?: Record<string, () => unknown>[]
+  /**
+   * A list of objects containing functions to represent methods added to the section.
+   *
+   * @example
+   * sections: {
+   *   apps: {
+   *     selector: 'div.gb_pc',
+   *     commands: [
+   *       {
+   *         clickYoutube() {
+   *           console.log('Click Youtube')
+   *         }
+   *       }
+   *     ]
+   *   }
+   * }
+   */
+  commands?: Record<string, () => unknown>[];
 }
 
 export type EnhancedSectionInstance<
@@ -85,6 +151,12 @@ export interface EnhancedPageObjectSections<
   Elements = {},
   Sections = {},
 > extends EnhancedPageObjectSharedFields<{}, Commands, Props, Elements, Sections> {
+  /**
+   * The element selector name
+   *
+   * @example
+   * '@searchBar'
+   */
   selector: string;
 }
 
@@ -96,12 +168,18 @@ interface EnhancedPageObjectSharedFields<
   Sections = {},
 > {
   /**
-   * A map of Element objects (see [Enhanced Element Instances](https://github.com/nightwatchjs/nightwatch/wiki/Page-Object-API#enhanced-element-instances)) used by element selectors.
+   * A map of Element objects
+   * (see [Enhanced Element Instances](https://github.com/nightwatchjs/nightwatch/wiki/Page-Object-API#enhanced-element-instances))
+   * used by element selectors.
    */
   elements: {
     [key in keyof Elements]: EnhancedElementInstance<EnhancedPageObject<URL, Commands, Props, Elements, Sections>>;
   };
 
+  /**
+   * Section object
+   * (see [Enhanced Element Instances](https://github.com/nightwatchjs/nightwatch/wiki/Page-Object-API#enhanced-section-instances))
+   */
   section: {
     [key in keyof Sections]: EnhancedSectionInstance<
       Required<MergeObjectsArray<Sections[key]['commands']>>,
@@ -116,5 +194,8 @@ interface EnhancedPageObjectSharedFields<
    */
   name: string;
 
+  /**
+   * An object or a function returning an object representing a container for user variables.
+   */
   props: Props;
 }
