@@ -1,5 +1,15 @@
 import { NightwatchAPI, NightwatchClient } from "../../index";
 
+interface NightwatchAssertionSuccessfulResult<T> {
+  value?: T;
+}
+
+interface NightwatchAssertionFailedResult<T> {
+  value: T;
+  status: number;
+}
+
+
 /**
  * Abstract assertion class that will subclass all defined assertions
  *
@@ -8,6 +18,8 @@ import { NightwatchAPI, NightwatchClient } from "../../index";
 export interface NightwatchAssertion<T, U = unknown> {
   /**
    * If the custom commands operates with DOM elements, this options should be set
+   *
+   * @internal
    *
    * @example
    * this.options = {
@@ -21,10 +33,13 @@ export interface NightwatchAssertion<T, U = unknown> {
   /**
    * Returns the expected value of the assertion which is displayed in the case of a failure
    *
+   * @internal
+   *
    * @example
    * this.expected = function() {
    *   return this.negate ? `is not '${expectedText}'` : `is '${expectedText}'`;
    * };
+   *
    */
   expected: (() => T) | T;
 
@@ -32,6 +47,8 @@ export interface NightwatchAssertion<T, U = unknown> {
    * The message which will be used in the test output ana inside the XML reports
    *
    * @remarks The formatMessage method creates the same option message. this.message or this.formatMessage must be specified!
+   *
+   * @internal
    *
    * @example
    * this.message = `Testing if the page title contains ${expression}`;
@@ -44,6 +61,8 @@ export interface NightwatchAssertion<T, U = unknown> {
    *
    * @remarks This option can also override the evaluate method. this.pass or this.evaluate must be specified!
    *
+   * @internal
+   *
    * @example
    * this.pass = function (value) {
    *   return this.expected.test(value);
@@ -54,15 +73,19 @@ export interface NightwatchAssertion<T, U = unknown> {
   /**
    * Called with the result object of the command to retrieve the value which is to be evaluated
    *
+   * @internal
+   *
    * @example
    * this.value = function(result) {
    *    return result.value;
    * };
    */
-  value?(result: U): T;
+  value?(result: NightwatchAssertionSuccessfulResult<U>): T;
 
   /**
    * The command which is to be executed by the assertion runner; Nightwatch api is available as this.api
+   *
+   * @internal
    *
    * @example
    * this.command = function(callback) {
@@ -78,7 +101,7 @@ export interface NightwatchAssertion<T, U = unknown> {
    *    }, 1000);
    * };
    */
-  command(callback: (result: U) => void): this;
+  command(callback: (result: NightwatchAssertionSuccessfulResult<U>) => void): unknown;
 
   /**
    * Returns the message format which will be used to output the message in the console and also
@@ -87,6 +110,8 @@ export interface NightwatchAssertion<T, U = unknown> {
    * The message format also takes into account whether the .not negate has been used.
    *
    * @remarks The formatMessage method creates option message. this.message or this.formatMessage must be specified!
+   *
+   * @internal
    *
    * @example
    * this.formatMessage = function() {
@@ -105,6 +130,8 @@ export interface NightwatchAssertion<T, U = unknown> {
   /**
    * Given the value, the condition used to evaluate if the assertion is passed
    *
+   * @internal
+   *
    * @remarks This option can also override the pass method. this.pass or this.evaluate must be specified!
    *
    * @example
@@ -122,16 +149,20 @@ export interface NightwatchAssertion<T, U = unknown> {
    * When defined, this method is called by the assertion runner with the command result, to determine if the
    * value can be retrieved successfully from the result object
    *
+   * @internal
+   *
    * @example
    * this.failure = function(result) {
    *   return result === false || result && result.status === -1;
    * };
    */
-  failure?(result: U): boolean; // TODO CHECK TYPE (ARGS AND RETURN)
+  failure?(result: NightwatchAssertionFailedResult<U>): boolean;
 
   /**
    * When defined, this method is called by the assertion runner with the command result to determine the actual
    * state of the assertion in the event of a failure
+   *
+   * @internal
    *
    * @example
    * this.actual = function(passed) {
@@ -142,16 +173,22 @@ export interface NightwatchAssertion<T, U = unknown> {
 
   /**
    * Nightwatch API
+   *
+   * @internal
    */
   readonly api: NightwatchAPI;
 
   /**
    * Nightwatch Client
+   *
+   * @internal
    */
   readonly client: NightwatchClient;
 
   /**
    * Use this.negate to determine if ".not" is in use
+   *
+   * @internal
    */
   readonly negate: boolean;
 }

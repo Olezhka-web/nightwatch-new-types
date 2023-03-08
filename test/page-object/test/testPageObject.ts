@@ -32,7 +32,7 @@ describe('test Page Object Model', function () {
 
       console.log(form.section.m.elements.b.selector)
 
-      console.log(form.section.m.section.myForm.selector); // TODO
+      console.log(form.section.m.section.myForm.selector);
 
       // Check if submitButton visible
       await form.expect.element('@mail').to.be.visible;

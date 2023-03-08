@@ -1,9 +1,9 @@
 describe('test Custom Assertions', function () {
-  it('should check calls to custom assertions ', async function () {
+  it('should check calls to custom assertions ', function () {
     // Call from .assert
-    // browser.assert.customAssert(''); // TODO FIX ERROR
+    browser.assert.customAssert('test title assert');
     //
     // // Call from .verify
-    // browser.verify.customAssert();
+    browser.verify.customAssert('test title assert');
   });
 });

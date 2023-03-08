@@ -9,9 +9,9 @@ declare module '../../src/globals' {
 const globals: NightwatchGlobals = {
   myGlobalVar: 'some value',
 
-  reporter: (results, done) => {
-    done('value1', 'value2');
+  reporter(results, done) {
+    done(results, 'value1', 'value2');
   }
-}
+};
 
 export default globals;

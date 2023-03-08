@@ -27,8 +27,7 @@ const customCommands: ICustomCommands = {
   }
 }
 
-// TODO SectionProperties
-const menuSection = {
+const menuSection: PageObjectModel["sections"] = {
   menu: {
     selector: '#gb',
     elements: {
@@ -88,7 +87,6 @@ const googlePage = {
       },
     },
   ],
-  // @ts-ignore TODO THIS
   sections: menuSection
 } satisfies PageObjectModel;
 

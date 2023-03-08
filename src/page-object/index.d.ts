@@ -16,7 +16,7 @@ import { MergeObjectsArray } from "../utils/merge-objects-array";
  *   // Some options
  * } satisfies PageObjectModel;
  */
-// TODO WRONG TYPES!!!
+
 export interface PageObjectModel {
   /**
    * A list of objects containing functions to represent methods added to the page object instance.

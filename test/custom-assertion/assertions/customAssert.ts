@@ -1,4 +1,4 @@
-import { NightwatchAssertion } from "../../../src/custom-assertion";
+import { Assert } from "../../../index";
 
 declare module '../../../src/custom-assertion' {
   interface NightwatchCustomAssertions {
@@ -6,38 +6,35 @@ declare module '../../../src/custom-assertion' {
   }
 }
 
-function assertion(this: NightwatchAssertion<string>, expectedText: string) {
+function assertion(this: Assert<string, string>, expected: string) {
+  this.expected = function() {
+    return this.negate ? `is not '${expected}'` : `is '${expected}'`;
+  };
+
   this.formatMessage = function() {
     const message = `Testing if the page title ${this.negate ? 'doesn\'t equal %s' : 'equals %s'}`;
 
     return {
       message,
-      args: []
-    }
+      args: [`'${expected}'`]
+    };
   };
 
-  this.expected = function() {
-    return this.negate ? `is not '${expectedText}'` : `is '${expectedText}'`;
+  this.evaluate = function(value) {
+    return value === expected;
   };
 
-  this.evaluate = function(value: any) {
-    if (typeof value != 'string') {
-      return false;
-    }
-
-    return value.includes(expectedText);
+  // TODO Conflict with another value method in Assert
+  this.value = function(result = {}) {
+    return result.value || '';
   };
 
-  this.command = function(callback: (params: { value: string }) => void) {
-    setTimeout(function() {
-      callback({
-        value: ''
-      });
+  this.command = function(callback) {
+    // TODO NOT WORKING!
+    // return this.api.getAttribute('input', 'maxlength', callback);
 
-    }, 1000);
-
-    return this;
+    callback({ value: 'test title assert' });
   };
 }
 
-export default assertion;
+export default { assertion };

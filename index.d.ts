@@ -21,7 +21,7 @@ import { WebElement, By, RelativeBy, Actions } from 'selenium-webdriver';
 import { Protocol } from 'devtools-protocol';
 import { Expect } from './expect';
 import { NightwatchCustomCommands } from "./src/custom-command";
-import { NightwatchCustomAssertions } from "./src/custom-assertion";
+import {NightwatchAssertion, NightwatchCustomAssertions} from "./src/custom-assertion";
 import { NightwatchGlobals } from "./src/globals";
 
 export * from './globals';
@@ -951,7 +951,10 @@ export interface Ensure {
     urlMatches(regex: RegExp): Awaitable<NightwatchAPI, NightwatchEnsureResult>;
 }
 
-export interface Assert extends NightwatchAssertions, NightwatchNodeAssertions {}
+export interface Assert<
+  T,
+  U = unknown
+> extends NightwatchAssertion<T, U>, NightwatchAssertions, NightwatchNodeAssertions {}
 
 export interface NightwatchAssertions extends NightwatchCommonAssertions, NightwatchCustomAssertions {
     /**
